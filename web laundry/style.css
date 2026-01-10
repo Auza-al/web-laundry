@@ -1,0 +1,171 @@
+body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+.hero-bg { background: radial-gradient(circle at top right, #eff6ff 0%, #ffffff 50%); }
+
+.glass-nav {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.step-number {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+    font-weight: 800;
+    font-size: 1.25rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.icon-box {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+    transition: all 0.3s ease;
+}
+
+.category-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.category-card:hover { transform: translateY(-12px); border-color: #2563eb; }
+.category-card:hover .icon-box { background-color: #2563eb; color: white; }
+.category-card.active { border-color: #2563eb; background-color: #eff6ff; }
+
+.form-input {
+    width: 100%;
+    padding: 1.25rem;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 1.25rem;
+    color: white;
+    outline: none;
+}
+.form-input:focus { border-color: #2563eb; }
+
+.faq-item i.rotate { transform: rotate(180deg); }
+.faq-answer { animation: slideDown 0.3s ease-out; }
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Menyeragamkan tampilan Select dengan Input */
+.form-input {
+    width: 100%;
+    padding: 1.25rem;
+    background-color: #1e293b; /* slate-800 */
+    border: 1px solid #334155; /* slate-700 */
+    border-radius: 1.25rem;
+    color: #f8fafc; /* slate-50 */
+    outline: none;
+    appearance: none; /* Menghilangkan panah bawaan browser */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: #2563eb; /* blue-600 */
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Memperbaiki tampilan pilihan (option) di dalam dropdown */
+.form-input option {
+    background-color: #1e293b; /* Menyesuaikan warna background saat diklik */
+    color: white;
+    padding: 10px;
+}
+
+/* Mengatur agar teks placeholder dan pilihan pertama tidak terlihat kusam */
+.form-input:invalid, .form-input option[value="0"] {
+    color: #94a3b8; /* slate-400 */
+}
+/* Slider Comparison */
+.comparison-container {
+    position: relative;
+    user-select: none;
+}
+
+.comparison-slider {
+    position: absolute;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    margin: 0;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    cursor: col-resize;
+}
+
+.comparison-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 4px solid #2563eb;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+/* Container Ikon Sosmed */
+.sosmed-container {
+    display: flex;
+    justify-content: center;
+    gap: 5rem; /* Memberi jarak antar ikon */
+    margin-top: 2rem;
+}
+
+.sosmed-link {
+    width: 50px; /* Lebar wadah */
+    height: 50px; /* Tinggi wadah */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px; /* Sudut membulat yang modern */
+    color: white !important;
+    font-size: 2rem; /* Ukuran ikon di dalam */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+/* Efek Hover (Saat kursor di atas ikon) */
+.sosmed-link:hover {
+    transform: translateY(-8px) rotate(5deg);
+    filter: brightness(1.2);
+}
+
+/* Warna Spesifik Platform */
+.ig-color { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+.tk-color { background: #000000; border: 1px solid #333; }
+.fb-color { background: #1877F2; }
+
+/* Efek Hover Testimoni */
+#testimoni .bg-white {
+    transition: all 0.4s ease;
+}
+
+#testimoni .bg-white:hover {
+    transform: translateY(-10px);
+    border: 1px solid #bfdbfe; /* blue-200 */
+}
+
+/* Gambar Tips */
+#edukasi img {
+    transition: transform 0.5s ease;
+}
+
+#edukasi img:hover {
+    transform: scale(1.03);
+}

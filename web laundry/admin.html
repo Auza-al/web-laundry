@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | PremiumCare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-slate-100">
+
+    <header class="md:hidden bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700 sticky top-0 z-50">
+        <h1 class="text-xl font-black text-blue-500 italic">ADMIN<span class="text-white">PANEL</span></h1>
+        <button onclick="toggleSidebar()" class="text-2xl text-white focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="flex">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-800 p-6 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out md:relative md:flex md:flex-col border-r border-slate-700 h-screen">
+            <div class="hidden md:block mb-10">
+                <h1 class="text-xl font-black text-blue-500 italic">ADMIN<span class="text-white">PANEL</span></h1>
+            </div>
+            
+            <nav class="space-y-2 flex-1">
+                <button onclick="showSection('dashboard')" class="nav-btn w-full text-left p-3 rounded-xl font-bold bg-blue-600 text-white transition-all" id="btn-dashboard">
+                    <i class="fas fa-home mr-2 w-6"></i> Dashboard
+                </button>
+                <button onclick="showSection('pesanan')" class="nav-btn w-full text-left p-3 rounded-xl font-bold hover:bg-slate-700 transition-all text-slate-400" id="btn-pesanan">
+                    <i class="fas fa-list-check mr-2 w-6"></i> Pesanan
+                </button>
+                <button onclick="showSection('promo')" class="nav-btn w-full text-left p-3 rounded-xl font-bold hover:bg-slate-700 transition-all text-slate-400" id="btn-promo">
+                    <i class="fas fa-bullhorn mr-2 w-6"></i> Kelola Promo
+                </button>
+                <button onclick="showSection('harga')" class="nav-btn w-full text-left p-3 rounded-xl font-bold hover:bg-slate-700 transition-all text-slate-400" id="btn-harga">
+                    <i class="fas fa-tags mr-2 w-6"></i> Kelola Harga
+                </button>
+            </nav>
+
+            <button onclick="logout()" class="w-full text-left p-3 hover:bg-red-500/20 text-red-400 rounded-xl transition mt-auto border border-red-500/20">
+                <i class="fas fa-sign-out-alt mr-2"></i> Keluar
+            </button>
+        </aside>
+
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
+
+        <main class="flex-1 p-6 md:p-10 w-full overflow-x-hidden">
+            
+            <div id="section-dashboard" class="admin-section">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                    <h2 class="text-2xl font-bold">Ringkasan Bisnis</h2>
+                    <div class="flex items-center gap-3 bg-slate-800 p-2 px-4 rounded-2xl border border-slate-700">
+                        <i class="fas fa-filter text-blue-500 text-sm"></i>
+                        <input type="date" id="filter-date" onchange="muatPesanan()" class="bg-transparent outline-none text-sm text-white cursor-pointer">
+                        <button onclick="resetFilter()" class="text-[10px] bg-slate-700 px-2 py-1 rounded hover:bg-slate-600 transition">Reset</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                    <div class="bg-slate-800 p-6 rounded-[2rem] border border-slate-700 hover:border-blue-500 transition-all group">
+                        <div class="text-blue-500 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fas fa-wallet"></i></div>
+                        <div class="text-slate-400 text-sm font-medium">Total Omzet <span class="filter-status text-[10px] text-blue-400 italic"></span></div>
+                        <div id="display-omzet" class="text-3xl font-black mt-1">Rp 0</div>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-[2rem] border border-slate-700 hover:border-green-500 transition-all group">
+                        <div class="text-green-500 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="text-slate-400 text-sm font-medium">Pesanan Terfilter</div>
+                        <div id="display-total-pesanan" class="text-3xl font-black mt-1 text-green-400">0</div>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-[2rem] border border-slate-700 hover:border-orange-500 transition-all group cursor-not-allowed">
+                        <div class="text-orange-500 text-2xl mb-2 group-hover:scale-110 transition-transform"><i class="fas fa-clock"></i></div>
+                        <div class="text-slate-400 text-sm font-medium">Proses Cuci</div>
+                        <div class="text-3xl font-black mt-1">8</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-pesanan" class="admin-section hidden">
+                <h2 class="text-2xl font-bold mb-8">Daftar Pesanan Masuk</h2>
+                <div class="bg-slate-800 rounded-[2rem] overflow-hidden border border-slate-700 shadow-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-700/50">
+                                <tr>
+                                    <th class="p-5 text-xs font-bold uppercase text-slate-400 tracking-wider">Nama & Waktu</th>
+                                    <th class="p-5 text-xs font-bold uppercase text-slate-400 tracking-wider">Layanan</th>
+                                    <th class="p-5 text-xs font-bold uppercase text-slate-400 tracking-wider">Total Harga</th>
+                                    <th class="p-5 text-xs font-bold uppercase text-slate-400 tracking-wider text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700/50"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-promo" class="admin-section hidden">
+                <h2 class="text-2xl font-bold mb-8">Pengaturan Promo Website</h2>
+                <div class="bg-slate-800 p-8 rounded-[2.5rem] border border-slate-700 max-w-2xl shadow-xl">
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 bg-slate-900 rounded-2xl border border-slate-700">
+                            <div>
+                                <span class="font-bold block">Status Aktif</span>
+                                <span class="text-xs text-slate-500">Munculkan banner promo di halaman user</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="promo-status-toggle" class="sr-only peer">
+                                <div class="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="grid gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase ml-2">Judul Banner</label>
+                                <input type="text" id="admin-promo-title" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mt-1 focus:border-blue-500 outline-none" placeholder="Contoh: PROMO AKHIR PEKAN!">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase ml-2">Deskripsi Singkat</label>
+                                <input type="text" id="admin-promo-desc" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mt-1 focus:border-blue-500 outline-none" placeholder="Contoh: Diskon cuci sepatu kilat">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase ml-2">Nilai Diskon (Badge)</label>
+                                <input type="text" id="admin-promo-value" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mt-1 focus:border-blue-500 outline-none" placeholder="Contoh: DISKON 30%">
+                            </div>
+                        </div>
+
+                        <button onclick="simpanPromo()" class="w-full bg-blue-600 py-4 rounded-2xl text-white font-bold hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+                            <i class="fas fa-save mr-2"></i> Terapkan ke Website
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-harga" class="admin-section hidden">
+                <h2 class="text-2xl font-bold mb-8">Kelola Harga Layanan</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="flex items-center justify-between p-6 bg-slate-800 border border-slate-700 rounded-3xl hover:border-blue-500/50 transition">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Pakaian Reguler</p>
+                            <p class="font-black text-xl text-white">Rp 7.000 <span class="text-sm font-normal text-slate-400">/ Kg</span></p>
+                        </div>
+                        <button onclick="alert('Fitur edit memerlukan database')" class="bg-blue-600/10 text-blue-500 p-3 rounded-2xl hover:bg-blue-600 hover:text-white transition"><i class="fas fa-pen"></i></button>
+                    </div>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-4">
+                    <div class="flex items-center justify-between p-6 bg-slate-800 border border-slate-700 rounded-3xl hover:border-blue-500/50 transition">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Pakaian Reguler</p>
+                            <p class="font-black text-xl text-white">Rp 7.000 <span class="text-sm font-normal text-slate-400">/ Kg</span></p>
+                        </div>
+                        <button onclick="alert('Fitur edit memerlukan database')" class="bg-blue-600/10 text-blue-500 p-3 rounded-2xl hover:bg-blue-600 hover:text-white transition"><i class="fas fa-pen"></i></button>
+                    </div>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-4">
+                    <div class="flex items-center justify-between p-6 bg-slate-800 border border-slate-700 rounded-3xl hover:border-blue-500/50 transition">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Pakaian Reguler</p>
+                            <p class="font-black text-xl text-white">Rp 7.000 <span class="text-sm font-normal text-slate-400">/ Kg</span></p>
+                        </div>
+                        <button onclick="alert('Fitur edit memerlukan database')" class="bg-blue-600/10 text-blue-500 p-3 rounded-2xl hover:bg-blue-600 hover:text-white transition"><i class="fas fa-pen"></i></button>
+                    </div>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-4">
+                    <div class="flex items-center justify-between p-6 bg-slate-800 border border-slate-700 rounded-3xl hover:border-blue-500/50 transition">
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Pakaian Reguler</p>
+                            <p class="font-black text-xl text-white">Rp 7.000 <span class="text-sm font-normal text-slate-400">/ Kg</span></p>
+                        </div>
+                        <button onclick="alert('Fitur edit memerlukan database')" class="bg-blue-600/10 text-blue-500 p-3 rounded-2xl hover:bg-blue-600 hover:text-white transition"><i class="fas fa-pen"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- KEAMANAN ---
+        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
+
+        // --- MANAJEMEN PESANAN ---
+        function muatPesanan() {
+            const tabelBody = document.querySelector('#section-pesanan tbody');
+            const filterDate = document.getElementById('filter-date').value;
+            const filterStatusLabel = document.querySelector('.filter-status');
+            let daftarPesanan = JSON.parse(localStorage.getItem('daftarPesanan')) || [];
+            
+            let pesananTersaring = daftarPesanan;
+            if (filterDate) {
+                const [y, m, d] = filterDate.split('-');
+                const cariTanggal = `${parseInt(d)}/${parseInt(m)}/${y}`; 
+                pesananTersaring = daftarPesanan.filter(order => order.waktu.includes(cariTanggal));
+                filterStatusLabel.innerText = `(${cariTanggal})`;
+            } else {
+                filterStatusLabel.innerText = "(Semua)";
+            }
+
+            let totalOmzet = 0;
+            pesananTersaring.forEach(order => {
+                const nominal = parseInt(order.total.replace(/[^0-9]/g, ''));
+                if(!isNaN(nominal)) totalOmzet += nominal;
+            });
+
+            document.getElementById('display-omzet').innerText = "Rp " + totalOmzet.toLocaleString('id-ID');
+            document.getElementById('display-total-pesanan').innerText = pesananTersaring.length;
+
+            tabelBody.innerHTML = '';
+            if (pesananTersaring.length === 0) {
+                tabelBody.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-slate-500 italic">Tidak ada data pesanan ditemukan</td></tr>';
+                return;
+            }
+
+            pesananTersaring.forEach((order, index) => {
+                const indexAsli = daftarPesanan.indexOf(order);
+                tabelBody.innerHTML += `
+                    <tr class="hover:bg-slate-700/20 transition group">
+                        <td class="p-5">
+                            <div class="font-bold text-white group-hover:text-blue-400 transition">${order.nama}</div>
+                            <div class="text-[10px] text-slate-500 font-medium">${order.waktu}</div>
+                        </td>
+                        <td class="p-5 text-sm text-slate-300">
+                            <span class="bg-slate-700 px-2 py-1 rounded text-[11px]">${order.layanan}</span>
+                        </td>
+                        <td class="p-5 text-blue-400 font-black tracking-wide">${order.total}</td>
+                        <td class="p-5 text-right">
+                            <button onclick="hapusPesanan(${indexAsli})" class="text-slate-500 hover:text-red-500 hover:bg-red-500/10 p-2 px-3 rounded-xl transition">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        // --- MANAJEMEN PROMO ---
+        function simpanPromo() {
+            const promoData = {
+                status: document.getElementById('promo-status-toggle').checked ? 'active' : 'inactive',
+                title: document.getElementById('admin-promo-title').value,
+                desc: document.getElementById('admin-promo-desc').value,
+                value: document.getElementById('admin-promo-value').value
+            };
+            localStorage.setItem('activePromo', JSON.stringify(promoData));
+            alert("Promo berhasil diperbarui!");
+        }
+
+        function muatDataPromoAdmin() {
+            const promoData = JSON.parse(localStorage.getItem('activePromo'));
+            if (promoData) {
+                document.getElementById('promo-status-toggle').checked = (promoData.status === 'active');
+                document.getElementById('admin-promo-title').value = promoData.title || '';
+                document.getElementById('admin-promo-desc').value = promoData.desc || '';
+                document.getElementById('admin-promo-value').value = promoData.value || '';
+            }
+        }
+
+        // --- NAVIGASI ---
+        function showSection(sectionId) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-slate-400', 'hover:bg-slate-700');
+            });
+            
+            const activeBtn = document.getElementById('btn-' + sectionId);
+            activeBtn.classList.add('bg-blue-600', 'text-white');
+            activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-700');
+
+            if (sectionId === 'promo') muatDataPromoAdmin();
+            if (sectionId === 'dashboard' || sectionId === 'pesanan') muatPesanan();
+            if (window.innerWidth < 768) toggleSidebar();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
+        function hapusPesanan(index) {
+            if (confirm("Hapus data pesanan ini?")) {
+                let daftarPesanan = JSON.parse(localStorage.getItem('daftarPesanan')) || [];
+                daftarPesanan.splice(index, 1);
+                localStorage.setItem('daftarPesanan', JSON.stringify(daftarPesanan));
+                muatPesanan();
+            }
+        }
+
+        function resetFilter() {
+            document.getElementById('filter-date').value = '';
+            muatPesanan();
+        }
+
+        function logout() {
+            sessionStorage.removeItem("isLoggedIn");
+            window.location.href = "login.html";
+        }
+
+        document.addEventListener('DOMContentLoaded', muatPesanan);
+    </script>
+</body>
+</html>
